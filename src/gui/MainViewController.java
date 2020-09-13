@@ -15,6 +15,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
+import model.services.DepartamentoServicos;
 
 public class MainViewController implements Initializable {
 
@@ -32,7 +33,7 @@ public class MainViewController implements Initializable {
 
 	@FXML
 	public void onItemMenuDepartamentoAction() {
-		carregaTela("/gui/ListaDepartamento.fxml");
+		carregaTela2("/gui/ListaDepartamento.fxml");
 	}
 
 	@FXML
@@ -78,6 +79,57 @@ public class MainViewController implements Initializable {
 			 */
 			vboxTelaPrincipal.getChildren().add(menuPrincipal);
 			vboxTelaPrincipal.getChildren().addAll(novoVBox.getChildren());
+
+		} catch (IOException e) {
+			Alerts.showAlerts("IOException", "Erro ao carregar a pagina", e.getMessage(), AlertType.ERROR);
+		}
+	}
+
+	private synchronized void carregaTela2(String nomeTela) {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource(nomeTela));
+
+			// janela que será aberta
+			VBox novoVBox = loader.load();
+
+			// pega a cena da tela princial main
+			Scene cenaPrincipal = Main.obterCenaPrincipal();
+
+			/*
+			 * variavel utilizada para converter o scrooplane da janela main em um vbox onde
+			 * será carregado o vbox da tela about
+			 */
+			VBox vboxTelaPrincipal = (VBox) ((ScrollPane) cenaPrincipal.getRoot()).getContent();
+
+			/*
+			 * variavel criada para guardar uma referência para o menu, preservando o menu
+			 * da tela principal
+			 */
+			Node menuPrincipal = vboxTelaPrincipal.getChildren().get(0);
+
+			// agora vamos limpar todos os filhos da tela principal
+			vboxTelaPrincipal.getChildren().clear();
+
+			/*
+			 * agora vamos adicionar os items que foram preservados nas variaveis acima na
+			 * tela principal, sendo que o novoVbox irá carregar a tela que forneceremos
+			 * como parâmetro do método
+			 */
+			vboxTelaPrincipal.getChildren().add(menuPrincipal);
+			vboxTelaPrincipal.getChildren().addAll(novoVBox.getChildren());
+
+			/*
+			 * Criado uma variavel da ListaDepartamenoControler para carregar os metodos na
+			 * inicialização da tela
+			 */
+			ListaDepartamentoControler controles = loader.getController();
+			/*
+			 * cria uma instancia do DepartamentoServicos para carregar os dados da lista
+			 * que foi criada na classe DepartamentoServicos
+			 */
+			controles.setarDepartamentoServico(new DepartamentoServicos());
+			// agora é possivel acessar o metodo atualizar tabela.
+			controles.atualizarTableView();
 
 		} catch (IOException e) {
 			Alerts.showAlerts("IOException", "Erro ao carregar a pagina", e.getMessage(), AlertType.ERROR);
