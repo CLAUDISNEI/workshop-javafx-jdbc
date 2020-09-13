@@ -1,18 +1,27 @@
 package gui;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import application.Main;
+import gui.util.Alerts;
+import gui.util.Utilidades;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.entities.Departamento;
 import model.services.DepartamentoServicos;
@@ -51,9 +60,18 @@ public class ListaDepartamentoControler implements Initializable {
 	
 	private ObservableList<Departamento> obsLista;
 	
+	/*o método recebe um evento para determinar a janela onde está o controle
+	 * e sobrepor a janela que será criada, inclusive mantedo-a no modelo 
+	 * modal
+	 */
 	@FXML
-	public void onBtNovoAction() {
-		System.out.println("Ação");
+	public void onBtNovoAction(ActionEvent evento) {
+		/*atraves do metodo palcoatual da classe utilidades
+		 * é possível setar esta informação na variavel parenteStage
+		 * e passala para o metodo criarjanela
+		 */
+		Stage parentStage = Utilidades.palcoAtual(evento);
+		criarJanelaDialogoForm(parentStage, "/gui/DepartamentoForm.fxml");
 	}
 	
 	/*
@@ -116,4 +134,29 @@ public class ListaDepartamentoControler implements Initializable {
 		tableViewDepartamentos.setItems(obsLista);
 	}
 
+	/*Será informado para o metodo o Stage que esta criando a janela de dialogo 
+	 * e o nome da nova janela.
+	 * 
+	 */
+	private void criarJanelaDialogoForm(Stage parentStage, String nomeTela) {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource(nomeTela));
+			
+			Pane painel = loader.load();
+			
+			//configuraão da nova janela
+			Stage dialogoStage = new Stage();
+			dialogoStage.setTitle("Entre os dados do departamento");
+			dialogoStage.setScene(new Scene(painel));
+			dialogoStage.setResizable(false);
+			//informa quem é a janela pai
+			dialogoStage.initOwner(parentStage);
+			//habilita a propriedade modal na janela 
+			dialogoStage.initModality(Modality.WINDOW_MODAL);
+			dialogoStage.showAndWait();
+			
+		}catch(IOException e) {
+			Alerts.showAlerts("IoException", "Erro ao Carrega a Janela", e.getMessage(), AlertType.ERROR);
+		}
+	}
 }
