@@ -143,6 +143,7 @@ public class ListaDepartamentoControler implements Initializable {
 			 */
 			DepartamentoFormControler controle = loader.getController();
 			controle.setarDepartamento(departamento);
+			controle.setarDepartamentoServicos(new DepartamentoServicos());
 			controle.atualizarDadosFormulario();
 			
 			//configuraão da nova janela
