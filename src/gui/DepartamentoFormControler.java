@@ -2,16 +2,17 @@ package gui;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-
 import gui.util.ValidacaoTxtField;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import model.entities.Departamento;
 
 public class DepartamentoFormControler implements Initializable {
 
+	private Departamento departamento;
 	
 	@FXML
 	private TextField txtId;
@@ -49,5 +50,19 @@ public class DepartamentoFormControler implements Initializable {
 		ValidacaoTxtField.setarCampoInteger(txtId);
 		ValidacaoTxtField.setarTamanhoMaximoTextField(txtNome, 30);
 	}
+	
+	public void setarDepartamento(Departamento departamento) {
+		this.departamento = departamento;
+	}
+	
+	public void atualizarDadosFormulario() {
+		if(departamento == null) {
+			throw new IllegalStateException("Departamento não foi fornecido!");
+		}
+		txtId.setText(String.valueOf(departamento.getId()));
+		txtNome.setText(departamento.getNome());
+	}
+	
+	
 
 }

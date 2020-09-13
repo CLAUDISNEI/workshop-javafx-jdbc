@@ -33,8 +33,6 @@ public class ListaDepartamentoControler implements Initializable {
 	 * injetando na classe
 	 */
 	private DepartamentoServicos servicos;
-	
-	
 	/*
 	 * Criando referências para os componentes que serão utilizados na tela 
 	 * ListaDepartamento.fxml
@@ -43,21 +41,15 @@ public class ListaDepartamentoControler implements Initializable {
 	//cria a referencia da table view já com o tipo que ela irá carregar
 	@FXML
 	private TableView<Departamento> tableViewDepartamentos;
-	
-	
 	/*a coluna recebe dois parâmentros o primeiro é o tipo da entidade e o segundo
 	 * o tipo da coluna
 	 */
 	@FXML
 	private TableColumn<Departamento, Integer> colunaID;
-	
 	@FXML
 	private TableColumn<Departamento, String> colunaNome;
-	
 	@FXML
 	private Button btNovo;
-	
-	
 	private ObservableList<Departamento> obsLista;
 	
 	/*o método recebe um evento para determinar a janela onde está o controle
@@ -67,11 +59,15 @@ public class ListaDepartamentoControler implements Initializable {
 	@FXML
 	public void onBtNovoAction(ActionEvent evento) {
 		/*atraves do metodo palcoatual da classe utilidades
-		 * é possível setar esta informação na variavel parenteStage
-		 * e passala para o metodo criarjanela
+		 *é possível setar esta informação na variavel parenteStage
+		 *e passala para o metodo criarjanela
 		 */
 		Stage parentStage = Utilidades.palcoAtual(evento);
-		criarJanelaDialogoForm(parentStage, "/gui/DepartamentoForm.fxml");
+		/*criado instancia de um Departamento que será utilizada para
+		 * cadastrar o novo departamento 
+		 */		
+		Departamento departamento = new Departamento();
+		criarJanelaDialogoForm(departamento, "/gui/DepartamentoForm.fxml",  parentStage);
 	}
 	
 	/*
@@ -137,11 +133,17 @@ public class ListaDepartamentoControler implements Initializable {
 	 * e o nome da nova janela.
 	 * 
 	 */
-	private void criarJanelaDialogoForm(Stage parentStage, String nomeTela) {
+	private void criarJanelaDialogoForm(Departamento departamento, String nomeTela, Stage parentStage) {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(nomeTela));
-			
 			Pane painel = loader.load();
+			
+			/*Criando uma instancia do Departamentocontroler para 
+			 * pegar o controlador da tela que foi carregada no loader
+			 */
+			DepartamentoFormControler controle = loader.getController();
+			controle.setarDepartamento(departamento);
+			controle.atualizarDadosFormulario();
 			
 			//configuraão da nova janela
 			Stage dialogoStage = new Stage();
