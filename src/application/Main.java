@@ -10,6 +10,10 @@ import javafx.stage.Stage;
 
 
 public class Main extends Application {
+	
+	//atributo declarado para poder fornecer a cena para outra tela
+	private static Scene cenaPrincipal;
+	
 	@Override
 	public void start(Stage primaryStage) {
 		try {
@@ -19,13 +23,18 @@ public class Main extends Application {
 			scrollPane.setFitToHeight(true);
 			scrollPane.setFitToWidth(true);
 			
-			Scene mainScene = new Scene(scrollPane);
-			primaryStage.setScene(mainScene);
+			cenaPrincipal = new Scene(scrollPane);
+			primaryStage.setScene(cenaPrincipal);
 			primaryStage.setTitle("Sample JavaFX application");
 			primaryStage.show();
 			} catch (IOException e) {
 			e.printStackTrace();
 			}
+	}
+	
+	//metodo que fornece a cena para outra
+	public static Scene obterCenaPrincipal() {
+		return cenaPrincipal;
 	}
 	
 	public static void main(String[] args) {
