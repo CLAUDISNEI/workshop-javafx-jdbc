@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import application.Main;
+import gui.listeners.AlterarDadosListeners;
 import gui.util.Alerts;
 import gui.util.Utilidades;
 import javafx.collections.FXCollections;
@@ -26,7 +27,7 @@ import javafx.stage.Stage;
 import model.entities.Departamento;
 import model.services.DepartamentoServicos;
 
-public class ListaDepartamentoControler implements Initializable {
+public class ListaDepartamentoControler implements Initializable, AlterarDadosListeners {
 
 	/*
 	 * Criando um dependência para a classe DepartamentoServicos e
@@ -144,6 +145,8 @@ public class ListaDepartamentoControler implements Initializable {
 			DepartamentoFormControler controle = loader.getController();
 			controle.setarDepartamento(departamento);
 			controle.setarDepartamentoServicos(new DepartamentoServicos());
+			//realiza a inscrição do controler na lista de ouvintes para atualizar os dados
+			controle.subscriverDataChangeListeners(this);
 			controle.atualizarDadosFormulario();
 			
 			//configuraão da nova janela
@@ -160,5 +163,10 @@ public class ListaDepartamentoControler implements Initializable {
 		}catch(IOException e) {
 			Alerts.showAlerts("IoException", "Erro ao Carrega a Janela", e.getMessage(), AlertType.ERROR);
 		}
+	}
+
+	@Override
+	public void dadosAlterados() {
+		atualizarTableView();		
 	}
 }
