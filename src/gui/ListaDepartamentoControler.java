@@ -145,7 +145,7 @@ public class ListaDepartamentoControler implements Initializable, AlterarDadosLi
 			DepartamentoFormControler controle = loader.getController();
 			controle.setarDepartamento(departamento);
 			controle.setarDepartamentoServicos(new DepartamentoServicos());
-			//realiza a inscrição do controler na lista de ouvintes para atualizar os dados
+			//realiza a inscrição do controler na lista de ouvintes para atualizar os dados na tabela
 			controle.subscriverDataChangeListeners(this);
 			controle.atualizarDadosFormulario();
 			
