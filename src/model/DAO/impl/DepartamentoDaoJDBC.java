@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import db.DB;
 import db.DbException;
+import db.DbIntegrityException;
 import model.DAO.DepartamentoDAO;
 import model.entities.Departamento;
 
@@ -112,7 +113,7 @@ public class DepartamentoDaoJDBC implements DepartamentoDAO {
 		}catch(SQLException e){
 			try {
 				conn.rollback();
-				throw new DbException("Erro: "+e.getMessage());
+				throw new DbIntegrityException("Erro: "+e.getMessage());
 			}catch(SQLException e2) {
 				throw new DbException("Erro ao cancelar exclusão! \n\n"+e2.getMessage() );
 			}
