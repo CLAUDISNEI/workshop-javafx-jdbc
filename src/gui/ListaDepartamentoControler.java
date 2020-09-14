@@ -9,6 +9,7 @@ import application.Main;
 import gui.listeners.AlterarDadosListeners;
 import gui.util.Alerts;
 import gui.util.Utilidades;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -18,6 +19,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -49,6 +51,10 @@ public class ListaDepartamentoControler implements Initializable, AlterarDadosLi
 	private TableColumn<Departamento, Integer> colunaID;
 	@FXML
 	private TableColumn<Departamento, String> colunaNome;
+	@FXML
+	private TableColumn<Departamento, Departamento> colunaEditar;
+	
+	
 	@FXML
 	private Button btNovo;
 	private ObservableList<Departamento> obsLista;
@@ -128,6 +134,7 @@ public class ListaDepartamentoControler implements Initializable, AlterarDadosLi
 		obsLista = FXCollections.observableArrayList(listaDepartamentos);
 		//carrega a observablelist na tabview
 		tableViewDepartamentos.setItems(obsLista);
+		habilitarBotaoEditar();
 	}
 
 	/*Será informado para o metodo o Stage que esta criando a janela de dialogo 
@@ -169,4 +176,24 @@ public class ListaDepartamentoControler implements Initializable, AlterarDadosLi
 	public void dadosAlterados() {
 		atualizarTableView();		
 	}
+	
+	private void habilitarBotaoEditar() {
+		 colunaEditar.setCellValueFactory( param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+		 colunaEditar.setCellFactory(param -> new TableCell<Departamento, Departamento>(){
+			 private final Button botao = new Button("edit");
+			 
+			 @Override
+			 protected void updateItem(Departamento dep, boolean empty) {
+				 super.updateItem(dep, empty);
+				 if(dep == null) {
+					 setGraphic(null);
+					 return;
+				 }
+				 setGraphic(botao);
+				 botao.setOnAction(evento -> criarJanelaDialogoForm(dep, "/gui/DepartamentoForm.fxml", Utilidades.palcoAtual(evento)));
+			 }
+			 
+		 });
+	}
+	
 }
