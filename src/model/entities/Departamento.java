@@ -61,7 +61,7 @@ public class Departamento implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Departamento [Id=" + Id + ", nome=" + nome + "]";
+		return this.nome;
 	}
 
 }

@@ -1,13 +1,14 @@
 package gui;
 
 import java.net.URL;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Observable;
 import java.util.ResourceBundle;
 import java.util.Set;
 
@@ -128,6 +129,27 @@ public class VendedorFormControler implements Initializable {
 		}
 		vendedor.setName(txtNome.getText());
 
+		if (txtEmail.getText() == null || txtEmail.getText().trim().equals("")) {
+			excecao.adicionaErros("Email", "O campo não pode ser vazio");
+		}
+		vendedor.setEmail(txtEmail.getText());
+
+		if (dpNascimento.getValue() == null) {
+			excecao.adicionaErros("Data Nascimento", "O Campo não pode ser vazio");
+		} else {
+			// para capturar o valor do dataPicker é necessário
+			// instanciar uma variavel para capturar esta data
+			Instant instante = Instant.from(dpNascimento.getValue().atStartOfDay(ZoneId.systemDefault()));
+			// agora é necessário converter o valor
+			vendedor.setBirthDate(Date.from(instante));
+		}
+		if (txtSalarioBase.getText() == null || txtSalarioBase.getText().trim().equals("")) {
+			excecao.adicionaErros("Salario Base", "O campo não pode ser vazio");
+		}
+		vendedor.setBaseSalary(Utilidades.converterParaDouble(txtSalarioBase.getText()));
+		
+		vendedor.setDepartamento(cbxDepartamento.getValue());
+		
 		if (excecao.getErros().size() > 0) {
 			throw excecao;
 		}
@@ -172,17 +194,17 @@ public class VendedorFormControler implements Initializable {
 		txtNome.setText(vendedor.getName());
 		txtEmail.setText(vendedor.getEmail());
 		Locale.setDefault(Locale.US);
-		
-		if(vendedor.getBaseSalary() == null) {
+
+		if (vendedor.getBaseSalary() == null) {
 			txtSalarioBase.setText("");
-		}else {
+		} else {
 			txtSalarioBase.setText(String.format("%.2f", vendedor.getBaseSalary()));
-		}	
-		
+		}
+
 		if (vendedor.getBirthDate() != null) {
 			dpNascimento.setValue(LocalDate.ofInstant(vendedor.getBirthDate().toInstant(), ZoneId.systemDefault()));
 		}
-		
+
 		// quando estiver cadastrando o vendedor
 		// o cbox irá carregar o campo vazio
 		if (vendedor.getDepartamento() == null) {
@@ -195,11 +217,12 @@ public class VendedorFormControler implements Initializable {
 
 	private void setarMensagensErros(Map<String, String> erros) {
 		Set<String> campos = erros.keySet();
-
-		if (campos.contains("nome")) {
-			lblErrorNome.setText(erros.get("nome"));
-		}
-
+		
+		lblErrorNome.setText((campos.contains("nome") ? erros.get("nome") : " "));
+		lblErrorEmail.setText((campos.contains("Email") ? erros.get("Email") : " "));
+		lblErrorSalarioBase.setText((campos.contains("Salario Base") ? erros.get("Salario Base") : " "));
+		lblErrorNascimento.setText((campos.contains("Data Nascimento") ? erros.get("Data Nascimento") : " "));
+		
 	}
 
 	/*
@@ -223,7 +246,7 @@ public class VendedorFormControler implements Initializable {
 
 			}
 		};
-		
+
 		cbxDepartamento.setCellFactory(fabrica);
 		cbxDepartamento.setButtonCell(fabrica.call(null));
 	}

@@ -36,6 +36,20 @@ public class Utilidades {
 			return null;
 		}
 	}
+	
+	// metodo para retornar a conversão de string para double
+		public static Double converterParaDouble(String valor) {
+			/*
+			 * caso ocorra um erro no formato informado, será lançado a exção do tipo
+			 * NumberFormatException e valor será retornado null;
+			 */
+			try {
+				return Double.parseDouble(valor);
+			} catch (NumberFormatException e) {
+				return null;
+			}
+		}
+	
 
 	public static <T> void formatarTipoDataEmColunas(TableColumn<T, Date> colunaTabela, String stringFormato) {
 		colunaTabela.setCellFactory(coluna -> {
