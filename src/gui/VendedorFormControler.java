@@ -1,8 +1,11 @@
 package gui;
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -17,6 +20,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import model.entities.Vendedor;
@@ -38,7 +42,25 @@ public class VendedorFormControler implements Initializable {
 	private TextField txtNome;
 
 	@FXML
-	private Label lblError;
+	private TextField txtEmail;
+
+	@FXML
+	private DatePicker dpNascimento;
+
+	@FXML
+	private TextField txtSalarioBase;
+
+	@FXML
+	private Label lblErrorNome;
+
+	@FXML
+	private Label lblErrorEmail;
+
+	@FXML
+	private Label lblErrorNascimento;
+
+	@FXML
+	private Label lblErrorSalarioBase;
 
 	@FXML
 	private Button btSalvar;
@@ -110,7 +132,10 @@ public class VendedorFormControler implements Initializable {
 	@SuppressWarnings("unused")
 	private void inicializandoControles() {
 		ValidacaoTxtField.setarCampoInteger(txtId);
-		ValidacaoTxtField.setarTamanhoMaximoTextField(txtNome, 30);
+		ValidacaoTxtField.setarTamanhoMaximoTextField(txtNome, 70);
+		ValidacaoTxtField.setarCampoDouble(txtSalarioBase);
+		ValidacaoTxtField.setarTamanhoMaximoTextField(txtEmail, 60);
+		Utilidades.formatarDatePicker(dpNascimento, "dd/MM/yyyy");
 	}
 
 	public void setarVendedor(Vendedor vendedor) {
@@ -127,13 +152,19 @@ public class VendedorFormControler implements Initializable {
 		}
 		txtId.setText(String.valueOf(vendedor.getId()));
 		txtNome.setText(vendedor.getName());
+		txtEmail.setText(vendedor.getEmail());
+		Locale.setDefault(Locale.US);
+		txtSalarioBase.setText(String.format("%.2f", vendedor.getBaseSalary()));
+		if (vendedor.getBirthDate() != null) {
+			dpNascimento.setValue(LocalDate.ofInstant(vendedor.getBirthDate().toInstant(), ZoneId.systemDefault()));
+		}
 	}
 
 	private void setarMensagensErros(Map<String, String> erros) {
 		Set<String> campos = erros.keySet();
 
 		if (campos.contains("nome")) {
-			lblError.setText(erros.get("nome"));
+			lblErrorNome.setText(erros.get("nome"));
 		}
 
 	}

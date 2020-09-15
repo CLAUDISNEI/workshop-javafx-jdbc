@@ -1,16 +1,18 @@
 package gui.util;
 
-
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Locale;
 
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.stage.Stage;
-
+import javafx.util.StringConverter;
 
 public class Utilidades {
 	/*
@@ -34,31 +36,10 @@ public class Utilidades {
 			return null;
 		}
 	}
-	
-	
-	/*
-	 * public static <T> void formatTableColumnDate(TableColumn<T, Date> tableColumn, String format) {
-tableColumn.setCellFactory(column -> {
-TableCell<T, Date> cell = new TableCell<T, Date>() {
-private SimpleDateFormat sdf = new SimpleDateFormat(format);
-@Override
-protected void updateItem(Date item, boolean empty) {
-super.updateItem(item, empty);
-if (empty) {
-setText(null);
-} else {
-setText(sdf.format(item));
-}
-}
-};
-return cell;
-});
-}
-	 */
 
-	public static <T> void formatarTipoDataEmColunas(TableColumn<T,Date> colunaTabela, String stringFormato) {
+	public static <T> void formatarTipoDataEmColunas(TableColumn<T, Date> colunaTabela, String stringFormato) {
 		colunaTabela.setCellFactory(coluna -> {
-			TableCell<T,Date> celula = new TableCell<T,Date>() {
+			TableCell<T, Date> celula = new TableCell<T, Date>() {
 				private SimpleDateFormat sdf = new SimpleDateFormat(stringFormato);
 
 				@Override
@@ -76,7 +57,34 @@ return cell;
 		});
 	}
 
-	public static <T> void formatarTipoDoubleColunas(TableColumn< T , Double> colunaTabela, int precisaoDecimal) {
+	public static void formatarDatePicker(DatePicker datePicker, String formatoData) {
+		datePicker.setConverter(new StringConverter<LocalDate>() {
+			DateTimeFormatter dataFormatada = DateTimeFormatter.ofPattern(formatoData);
+			{
+				datePicker.setPromptText(formatoData.toLowerCase());
+			}
+
+			@Override
+			public String toString(LocalDate data) {
+				if (data != null) {
+					return dataFormatada.format(data);
+				} else {
+					return "";
+				}
+			}
+
+			@Override
+			public LocalDate fromString(String valor) {
+				if (valor != null && !valor.isEmpty()) {
+					return LocalDate.parse(valor, dataFormatada);
+				} else {
+					return null;
+				}
+			}
+		});
+	}
+
+	public static <T> void formatarTipoDoubleColunas(TableColumn<T, Double> colunaTabela, int precisaoDecimal) {
 		colunaTabela.setCellFactory(coluna -> {
 			TableCell<T, Double> celula = new TableCell<T, Double>() {
 
