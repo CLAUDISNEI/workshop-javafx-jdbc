@@ -31,6 +31,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.entities.Vendedor;
+import model.services.DepartamentoServicos;
 import model.services.VendedorServicos;
 
 public class ListaVendedorControler implements Initializable, AlterarDadosListeners {
@@ -175,7 +176,9 @@ public class ListaVendedorControler implements Initializable, AlterarDadosListen
 			 */
 			VendedorFormControler controle = loader.getController();
 			controle.setarVendedor(vendedor);
-			controle.setarVendedorServicos(new VendedorServicos());
+			controle.setarVendedorServicosDepartamentoServicos(new VendedorServicos(), new DepartamentoServicos());
+			
+			controle.carregarDeparpatamentosNoCombobox();
 			// realiza a inscrição do controler na lista de ouvintes para atualizar os dados
 			// na tabela
 			controle.subscriverDataChangeListeners(this);
@@ -193,6 +196,7 @@ public class ListaVendedorControler implements Initializable, AlterarDadosListen
 			dialogoStage.showAndWait();
 
 		} catch (IOException e) {
+			e.printStackTrace();
 			Alerts.showAlerts("IoException", "Erro ao Carrega a Janela", e.getMessage(), AlertType.ERROR);
 		}
 	}

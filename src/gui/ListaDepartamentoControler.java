@@ -180,6 +180,7 @@ public class ListaDepartamentoControler implements Initializable, AlterarDadosLi
 			dialogoStage.showAndWait();
 
 		} catch (IOException e) {
+			e.printStackTrace();
 			Alerts.showAlerts("IoException", "Erro ao Carrega a Janela", e.getMessage(), AlertType.ERROR);
 		}
 	}
