@@ -1,6 +1,7 @@
 package gui;
 
 import java.net.URL;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -51,6 +52,12 @@ public class ListaVendedorControler implements Initializable, AlterarDadosListen
 	@FXML
 	private TableColumn<Vendedor, String> colunaNome;
 	@FXML
+	private TableColumn<Vendedor, String> colunaEmail;
+	@FXML
+	private TableColumn<Vendedor, Date> colunaNascimento;
+	@FXML
+	private TableColumn<Vendedor, Double> colunaSalarioBase;
+	@FXML
 	private TableColumn<Vendedor, Vendedor> colunaEditar;
 	@FXML
 	private TableColumn<Vendedor, Vendedor> colunaRemover;
@@ -98,6 +105,11 @@ public class ListaVendedorControler implements Initializable, AlterarDadosListen
 		// código necessário para carregar os valores nas colunas da tabela
 		colunaID.setCellValueFactory(new PropertyValueFactory<>("Id"));
 		colunaNome.setCellValueFactory(new PropertyValueFactory<>("name"));
+		colunaEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
+		colunaNascimento.setCellValueFactory(new PropertyValueFactory<>("birthDate"));
+		Utilidades.formatarTipoDataEmColunas(colunaNascimento, "dd/MM/yyyy");
+		colunaSalarioBase.setCellValueFactory(new PropertyValueFactory<>("baseSalary"));
+		Utilidades.formatarTipoDoubleColunas(colunaSalarioBase, 2);
 
 		/*
 		 * código para pegar a referência de um estado da tela principal porém é
